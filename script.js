@@ -95,7 +95,7 @@ function showConfetti() {
 }
 
 function createDrop() {
-  const isObstacle = Math.random() < 0.35;
+  const isObstacle = Math.random() < 0.18;
 
   // Create a new div element that will be our drop or obstacle
   const drop = document.createElement("div");
