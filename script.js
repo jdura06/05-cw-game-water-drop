@@ -1,6 +1,15 @@
 // Variables to control game state
 let gameRunning = false; // Keeps track of whether game is active or not
 let dropMaker; // Will store our timer that creates drops regularly
+let timerMaker; // Will store our timer countdown interval
+let score = 0; // Tracks the player's score
+let timeLeft = 30; // Game duration in seconds
+
+const scoreEl = document.getElementById("score");
+const timeEl = document.getElementById("time");
+const messageEl = document.getElementById("game-message");
+const startBtn = document.getElementById("start-btn");
+const gameContainer = document.getElementById("game-container");
 
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
@@ -10,9 +19,44 @@ function startGame() {
   if (gameRunning) return;
 
   gameRunning = true;
+  score = 0;
+  timeLeft = 30;
+  scoreEl.textContent = score;
+  timeEl.textContent = timeLeft;
+  messageEl.textContent = "";
+  startBtn.disabled = true;
+  gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
 
   // Create new drops every second (1000 milliseconds)
   dropMaker = setInterval(createDrop, 1000);
+  timerMaker = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  if (!gameRunning) return;
+
+  timeLeft -= 1;
+  timeEl.textContent = timeLeft;
+
+  if (timeLeft <= 0) {
+    endGame();
+  }
+}
+
+function endGame() {
+  if (!gameRunning) return;
+
+  gameRunning = false;
+  clearInterval(dropMaker);
+  clearInterval(timerMaker);
+  startBtn.disabled = false;
+
+  const endingMessage = score >= 20
+    ? "You win! Great job!"
+    : "Try again! Reach 20 drops to win.";
+
+  messageEl.textContent = endingMessage;
+  gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
 }
 
 function createDrop() {
@@ -36,7 +80,14 @@ function createDrop() {
   drop.style.animationDuration = "4s";
 
   // Add the new drop to the game screen
-  document.getElementById("game-container").appendChild(drop);
+  gameContainer.appendChild(drop);
+
+  // When a drop is clicked, increase score and remove it
+  drop.addEventListener("click", () => {
+    score += 1;
+    scoreEl.textContent = score;
+    drop.remove();
+  });
 
   // Remove drops that reach the bottom (weren't clicked)
   drop.addEventListener("animationend", () => {

@@ -125,6 +125,15 @@ body {
     text-align: center;
 }
 
+.game-message {
+    margin-top: 12px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #131313;
+    text-align: center;
+    min-height: 28px;
+}
+
 @keyframes dropFall {
     from {
         transform: translateY(-20px);
