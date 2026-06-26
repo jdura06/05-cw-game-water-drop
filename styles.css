@@ -88,11 +88,11 @@ body {
     font-weight: bold;
 }
 
-.water-drop {
+.water-drop,
+.obstacle-drop {
     position: absolute;
     width: 60px;  /* increased from 40px */
     height: 60px; /* increased from 40px */
-    background-color: #0099ff;
     border-radius: 50%;
     animation: dropFall linear forwards;
     transform-origin: center;
@@ -102,7 +102,16 @@ body {
     transition: transform 0.1s ease;  /* Smooth hover effect */
 }
 
-.water-drop:hover {
+.water-drop {
+    background-color: #0099ff;
+}
+
+.obstacle-drop {
+    background-color: #2ecc71;
+}
+
+.water-drop:hover,
+.obstacle-drop:hover {
     transform: scale(1.1);  /* Slight grow effect on hover */
 }
 
@@ -132,6 +141,21 @@ body {
     color: #131313;
     text-align: center;
     min-height: 28px;
+}
+
+.confetti {
+    position: absolute;
+    top: -20px;
+    border-radius: 2px;
+    pointer-events: none;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(640px) rotate(360deg);
+        opacity: 0;
+    }
 }
 
 @keyframes dropFall {

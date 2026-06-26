@@ -37,7 +37,7 @@ function startGame() {
   timeEl.textContent = timeLeft;
   messageEl.textContent = "";
   startBtn.disabled = true;
-  gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
+  gameContainer.querySelectorAll(".water-drop, .obstacle-drop").forEach((drop) => drop.remove());
 
   // Create new drops every second (1000 milliseconds)
   dropMaker = setInterval(createDrop, 1000);
@@ -68,7 +68,7 @@ function endGame() {
     : losingMessages[Math.floor(Math.random() * losingMessages.length)];
 
   messageEl.textContent = endingMessage;
-  gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
+  gameContainer.querySelectorAll(".water-drop, .obstacle-drop").forEach((drop) => drop.remove());
 
   if (score >= 20) {
     showConfetti();
@@ -95,9 +95,11 @@ function showConfetti() {
 }
 
 function createDrop() {
-  // Create a new div element that will be our water drop
+  const isObstacle = Math.random() < 0.35;
+
+  // Create a new div element that will be our drop or obstacle
   const drop = document.createElement("div");
-  drop.className = "water-drop";
+  drop.className = isObstacle ? "obstacle-drop" : "water-drop";
 
   // Make drops different sizes for visual variety
   const initialSize = 60;
@@ -117,9 +119,14 @@ function createDrop() {
   // Add the new drop to the game screen
   gameContainer.appendChild(drop);
 
-  // When a drop is clicked, increase score and remove it
+  // When a drop is clicked, increase or decrease score and remove it
   drop.addEventListener("click", () => {
-    score += 1;
+    if (drop.classList.contains("obstacle-drop")) {
+      score -= 1;
+    } else {
+      score += 1;
+    }
+
     scoreEl.textContent = score;
     drop.remove();
   });
