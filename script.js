@@ -5,6 +5,18 @@ let timerMaker; // Will store our timer countdown interval
 let score = 0; // Tracks the player's score
 let timeLeft = 30; // Game duration in seconds
 
+const winningMessages = [
+  "You win! Great job!",
+  "Amazing catch rate! You won!",
+  "Champion! You hit the target score!"
+];
+
+const losingMessages = [
+  "Try again! Reach 20 drops to win.",
+  "Almost there! Play again to get to 20.",
+  "Nice effort — keep practicing and try again!"
+];
+
 const scoreEl = document.getElementById("score");
 const timeEl = document.getElementById("time");
 const messageEl = document.getElementById("game-message");
@@ -52,11 +64,34 @@ function endGame() {
   startBtn.disabled = false;
 
   const endingMessage = score >= 20
-    ? "You win! Great job!"
-    : "Try again! Reach 20 drops to win.";
+    ? winningMessages[Math.floor(Math.random() * winningMessages.length)]
+    : losingMessages[Math.floor(Math.random() * losingMessages.length)];
 
   messageEl.textContent = endingMessage;
   gameContainer.querySelectorAll(".water-drop").forEach((drop) => drop.remove());
+
+  if (score >= 20) {
+    showConfetti();
+  }
+}
+
+function showConfetti() {
+  const colors = ["#FFC907", "#2E9DF7", "#8BD1CB", "#FF902A", "#F5402C", "#159A48", "#F16061"];
+  const confettiCount = 30;
+
+  for (let i = 0; i < confettiCount; i++) {
+    const confetti = document.createElement("div");
+    confetti.className = "confetti";
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.left = `${Math.random() * 100}%`;
+    confetti.style.animationDuration = `${1.5 + Math.random() * 1.5}s`;
+    confetti.style.width = `${6 + Math.random() * 8}px`;
+    confetti.style.height = `${6 + Math.random() * 8}px`;
+    confetti.style.opacity = `${0.7 + Math.random() * 0.3}`;
+    gameContainer.appendChild(confetti);
+
+    confetti.addEventListener("animationend", () => confetti.remove());
+  }
 }
 
 function createDrop() {
